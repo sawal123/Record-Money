@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
         primaryColor: AppColor.primary,
-        colorScheme: ColorScheme.light(
+        colorScheme: const ColorScheme.light(
           primary: AppColor.primary,
           secondary: AppColor.secondary,
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
             backgroundColor: AppColor.primary, foregroundColor: Colors.white),
       ),
       home: FutureBuilder(

@@ -7,33 +7,32 @@ import 'package:get/get.dart';
 import 'package:money_record_mobile/config/app_asset.dart';
 import 'package:money_record_mobile/config/app_color.dart';
 import 'package:money_record_mobile/data/source/source_user.dart';
-import 'package:money_record_mobile/presentation/page/auth/register_page.dart';
+import 'package:money_record_mobile/presentation/page/auth/login_page.dart';
 import 'package:money_record_mobile/presentation/page/home_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
+  final controllerName = TextEditingController();
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  login() async {
+  register() async {
     if (formKey.currentState!.validate()) {
-      bool success = await SourceUser.login(
-        controllerEmail.text,
-        controllerPassword.text,
-      );
+      bool success = await SourceUser.register(
+          controllerName.text, controllerEmail.text, controllerPassword.text);
       if (success) {
         DInfo.dialogSuccess(context, 'Berhasil Login');
         DInfo.closeDialog(context, actionAfterClose: () {
           Get.off(() => const HomePage());
         });
       } else {
-        DInfo.dialogSuccess(context, 'Gagal Login');
+        DInfo.dialogSuccess(context, 'Gagal Register');
         DInfo.closeDialog(context);
       }
     }
@@ -59,6 +58,26 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Image.asset(AppAsset.logo),
                           DView.spaceHeight(40),
+                          TextFormField(
+                            controller: controllerName,
+                            style: TextStyle(color: Colors.white),
+                            validator: (value) =>
+                                value == '' ? 'Wajib Diisi' : null,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            decoration: InputDecoration(
+                                hintStyle: TextStyle(color: Colors.white),
+                                fillColor: AppColor.primary.withOpacity(0.5),
+                                filled: true,
+                                hintText: 'Name',
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 16),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide.none)),
+                          ),
+                          DView.spaceHeight(),
                           TextFormField(
                             controller: controllerEmail,
                             style: TextStyle(color: Colors.white),
@@ -102,13 +121,13 @@ class _LoginPageState extends State<LoginPage> {
                             color: AppColor.primary,
                             borderRadius: BorderRadius.circular(100),
                             child: InkWell(
-                              onTap: () => login(),
+                              onTap: () => register(),
                               borderRadius: BorderRadius.circular(100),
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 40, vertical: 16),
                                 child: Text(
-                                  'LOGIN',
+                                  'Register',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -126,13 +145,13 @@ class _LoginPageState extends State<LoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Belum punya akun? '),
+                        const Text('Sudah punya akun? '),
                         GestureDetector(
                           onTap: () {
-                            Get.to(() => const RegisterPage());
+                            Get.back();
                           },
                           child: const Text(
-                            'Register',
+                            'Login',
                             style: TextStyle(
                                 color: AppColor.primary,
                                 fontWeight: FontWeight.bold,
