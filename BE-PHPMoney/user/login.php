@@ -2,9 +2,9 @@
 include '../connection.php';
 
 $email = $_POST['email'];
-$password = $_POST['password'];
+$password = md5($_POST['password']);
 
-$sql = "SELECT * FROM user WHERE email = $email AND password = $password";
+$sql = "SELECT * FROM user WHERE email = '$email' AND password ='$password'";
 $result = $connect->query($sql);
 if($result->num_rows >0){
     $user = array();
@@ -20,7 +20,8 @@ if($result->num_rows >0){
 }
 else{
     echo json_encode(array(
-        "success"=> false
+        "success"=> false,
+        "message"=> $sql
     ));
 }
 ?>
