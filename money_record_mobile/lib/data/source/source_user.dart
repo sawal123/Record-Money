@@ -1,6 +1,5 @@
 import 'package:d_info/d_info.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:money_record_mobile/config/api.dart';
 import 'package:money_record_mobile/config/app_request.dart';
 import 'package:money_record_mobile/config/session.dart';

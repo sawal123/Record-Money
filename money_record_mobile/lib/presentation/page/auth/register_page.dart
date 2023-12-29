@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:money_record_mobile/config/app_asset.dart';
 import 'package:money_record_mobile/config/app_color.dart';
 import 'package:money_record_mobile/data/source/source_user.dart';
-import 'package:money_record_mobile/presentation/page/auth/login_page.dart';
+// import 'package:money_record_mobile/presentation/page/auth/login_page.dart';
 import 'package:money_record_mobile/presentation/page/home_page.dart';
 
 class RegisterPage extends StatefulWidget {

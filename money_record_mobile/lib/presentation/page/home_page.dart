@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:money_record_mobile/config/app_asset.dart';
 import 'package:money_record_mobile/config/app_color.dart';
+import 'package:money_record_mobile/config/app_format.dart';
 import 'package:money_record_mobile/config/session.dart';
+import 'package:money_record_mobile/presentation/controller/c_home.dart';
 import 'package:money_record_mobile/presentation/controller/c_user.dart';
 import 'package:money_record_mobile/presentation/page/auth/login_page.dart';
 
@@ -16,35 +18,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<OrdinalData> ordinalList = [
-    OrdinalData(domain: 'Mon', measure: 3),
-    OrdinalData(domain: 'Tue', measure: 5),
-    OrdinalData(domain: 'Wed', measure: 9),
-    OrdinalData(domain: 'Thu', measure: 6.5),
-    OrdinalData(domain: 'Sat', measure: 6.5),
-    OrdinalData(domain: 'Sun', measure: 6.5),
-  ];
+  final cUser = Get.put(CUser());
+  final cHome = Get.put(CHome());
+  String stringPercent = '';
 
-  List<OrdinalData> ordinalDataList = [
-    OrdinalData(domain: 'Mon', measure: 40, color: Colors.blue[500]),
-    OrdinalData(domain: 'Sat', measure: 60, color: Colors.blue[300]),
-  ];
+  @override
+  void initState() {
+    cHome.getAnalysis(cUser.data.idUser!);
+    super.initState();
+    stringPercent = cHome.monthPercent;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cUser = Get.put(CUser());
+
+    List<OrdinalData> ordinalList = List.generate(7, (index) {
+      return OrdinalData(
+          domain: cHome.weekText()[index], measure: cHome.week[index]);
+    });
     final ordinalGroup = [
       OrdinalGroup(
         id: '1',
         data: ordinalList,
       ),
     ];
-    final cUser = Get.put(CUser());
     return Scaffold(
         endDrawer: Drawer(
             child: ListView(
           children: [
             DrawerHeader(
-              padding: EdgeInsets.fromLTRB(16, 20, 16, 20),
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Obx(() {
                               return Text(cUser.data.name ?? '',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold));
                             }),
@@ -98,34 +102,34 @@ class _HomePageState extends State<HomePage> {
             const Divider(height: 1),
             ListTile(
               onTap: () {},
-              leading: Icon(Icons.add),
+              leading: const Icon(Icons.add),
               horizontalTitleGap: 0,
-              title: Text('Tambah Baru'),
-              trailing: Icon(Icons.navigate_next),
+              title: const Text('Tambah Baru'),
+              trailing: const Icon(Icons.navigate_next),
             ),
             const Divider(height: 1),
             ListTile(
               onTap: () {},
-              leading: Icon(Icons.south_west),
+              leading: const Icon(Icons.south_west),
               horizontalTitleGap: 0,
-              title: Text('Pemasukan'),
-              trailing: Icon(Icons.navigate_next),
+              title: const Text('Pemasukan'),
+              trailing: const Icon(Icons.navigate_next),
             ),
             const Divider(height: 1),
             ListTile(
               onTap: () {},
-              leading: Icon(Icons.north_east),
+              leading: const Icon(Icons.north_east),
               horizontalTitleGap: 0,
-              title: Text('Pengeluaran'),
-              trailing: Icon(Icons.navigate_next),
+              title: const Text('Pengeluaran'),
+              trailing: const Icon(Icons.navigate_next),
             ),
             const Divider(height: 1),
             ListTile(
               onTap: () {},
-              leading: Icon(Icons.history),
+              leading: const Icon(Icons.history),
               horizontalTitleGap: 0,
-              title: Text('Riwayat'),
-              trailing: Icon(Icons.navigate_next),
+              title: const Text('Riwayat'),
+              trailing: const Icon(Icons.navigate_next),
             ),
             const Divider(height: 1),
           ],
@@ -178,7 +182,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: ListView(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
                 children: [
                   Text(
                     'Pengeluaran Hari Ini',
@@ -228,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                                 color: AppColor.primary,
                               ),
                               DView.spaceWidth(8),
-                              Text("Pemasukan")
+                              const Text("Pemasukan")
                             ],
                           ),
                           DView.spaceHeight(10),
@@ -240,22 +244,25 @@ class _HomePageState extends State<HomePage> {
                                 color: AppColor.chart,
                               ),
                               DView.spaceWidth(8),
-                              Text("Pengeluaran")
+                              const Text("Pengeluaran")
                             ],
                           ),
                           DView.spaceHeight(20),
-                          Text("Pemasukan"),
-                          Text("Lebih besar 20%"),
-                          Text("dari pengeluaran"),
+                          Obx(() {
+                            return Text(cHome.monthPercent);
+                          }),
                           DView.spaceHeight(10),
-                          Text("Atau setara: "),
-                          Text(
-                            "Rp20.000.00",
-                            style: TextStyle(
-                                color: AppColor.primary,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          )
+                          const Text("Atau setara: "),
+                          Obx(() {
+                            return (Text(
+                              AppFormat.currency(
+                                  cHome.differentMonth.toString()),
+                              style: const TextStyle(
+                                  color: AppColor.primary,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ));
+                          })
                         ],
                       ),
                     ],
@@ -272,17 +279,39 @@ class _HomePageState extends State<HomePage> {
       aspectRatio: 16 / 9,
       child: Stack(
         children: [
-          DChartPieO(
-            data: ordinalDataList,
-            configRenderPie: const ConfigRenderPie(
-              arcWidth: 30,
-            ),
-          ),
-          Center(
-              child: Text(
-            "60%",
-            style: Theme.of(context).textTheme.headlineMedium,
-          )),
+          // final data = cHome.ordinalDataList;
+          Obx(() {
+            return (DChartPieO(
+              data: [
+                OrdinalData(
+                  domain: 'income',
+                  measure: cHome.monthIncome,
+                  color: Colors.blue[500],
+                ),
+                OrdinalData(
+                  domain: 'outcome',
+                  measure: cHome.monthOutcome,
+                  color: Colors.blue[300],
+                ),
+                if (cHome.monthIncome == 0 && cHome.monthOutcome == 0)
+                  OrdinalData(
+                    domain: 'nol',
+                    measure: 1,
+                    color: const Color.fromARGB(255, 188, 209, 226),
+                  ),
+              ],
+              configRenderPie: const ConfigRenderPie(
+                arcWidth: 30,
+              ),
+            ));
+          }),
+
+          Center(child: Obx(() {
+            return (Text(
+              '${cHome.percentIncome}%',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ));
+          }))
         ],
       ),
     );
@@ -290,14 +319,24 @@ class _HomePageState extends State<HomePage> {
 
   AspectRatio weekly(List<OrdinalGroup> ordinalGroup) {
     return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: DChartBarO(
-        areaColor: (group, ordinalData, index) {
-          return Colors.green.withOpacity(0.3);
-        },
-        groupList: ordinalGroup,
-      ),
-    );
+        aspectRatio: 16 / 9,
+        child: Obx(() {
+          return (DChartBarO(
+            areaColor: (group, ordinalData, index) {
+              return Colors.green.withOpacity(0.3);
+            },
+            groupList: [
+              OrdinalGroup(
+                id: '1',
+                data: List.generate(7, (index) {
+                  return OrdinalData(
+                      domain: cHome.weekText()[index],
+                      measure: cHome.week[index]);
+                }),
+              ),
+            ],
+          ));
+        }));
   }
 
   Material cardToday(BuildContext context) {
@@ -310,20 +349,25 @@ class _HomePageState extends State<HomePage> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
-            child: Text('Rp 500.000',
+            child: Obx(() {
+              return (Text(
+                AppFormat.currency(cHome.today.toString()),
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.bold, color: AppColor.secondary)),
+                    fontWeight: FontWeight.bold, color: AppColor.secondary),
+              ));
+            }),
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 30),
-            child: Text(
-              '+20% dibanding kemarin',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
+              child: Obx(() {
+                return (Text(
+                  '${cHome.todayPercent}',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ));
+              })),
           Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
-            margin: EdgeInsets.fromLTRB(16, 0, 0, 16),
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            margin: const EdgeInsets.fromLTRB(16, 0, 0, 16),
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
