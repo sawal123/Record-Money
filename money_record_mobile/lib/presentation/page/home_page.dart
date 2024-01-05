@@ -9,6 +9,7 @@ import 'package:money_record_mobile/config/session.dart';
 import 'package:money_record_mobile/presentation/controller/c_home.dart';
 import 'package:money_record_mobile/presentation/controller/c_user.dart';
 import 'package:money_record_mobile/presentation/page/auth/login_page.dart';
+import 'package:money_record_mobile/presentation/page/history/add_history_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -101,7 +102,13 @@ class _HomePageState extends State<HomePage> {
             ),
             const Divider(height: 1),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                Get.to(() => AddHistoryPage())?.then((value) {
+                  if (value ?? false) {
+                    cHome.getAnalysis(cUser.data.idUser!);
+                  }
+                });
+              },
               leading: const Icon(Icons.add),
               horizontalTitleGap: 0,
               title: const Text('Tambah Baru'),

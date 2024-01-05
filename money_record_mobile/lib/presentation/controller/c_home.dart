@@ -44,7 +44,7 @@ class CHome extends GetxController {
   getAnalysis(String idUser) async {
     try {
       Map data = await SourceHistory.analysis(idUser);
-      print("Data Analysis: $data");
+      // print("Data Analysis: $data");
       _today.value = data['today'].toDouble();
       double yesterday = data['yesterday'].toDouble();
       double different = (today - yesterday).abs();
@@ -65,7 +65,7 @@ class CHome extends GetxController {
       _monthIncome.value = (data['month']['income'] ?? 0.0).toDouble();
       _monthOutcome.value = (data['month']['outcome'] ?? 0.0).toDouble();
       // print("Month Income: ${_week.value}");
-      print("Month Outcome: ${monthOutcome}");
+      // print("Month Outcome: ${monthOutcome}");
 
       _differentMonth.value = (monthIncome - monthOutcome).abs();
       bool isSameMonth = monthIncome.isEqual(monthOutcome);

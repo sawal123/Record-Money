@@ -89,6 +89,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
+  d_input:
+    dependency: "direct main"
+    description:
+      name: d_input
+      sha256: "1451e0ebd8bb49fb677ba97df7cbfd38c6820663daca48d4d5e42beb9c3c4ff1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   d_method:
     dependency: "direct main"
     description:
