@@ -19,17 +19,21 @@ class AddHistoryPage extends StatelessWidget {
   final cUser = Get.put(CUser());
   final controllerName = TextEditingController();
   final controllerPrice = TextEditingController();
-  addHistory() async {
+  addHistory(BuildContext context) async {
+    print("tes");
     bool success = await SourceHistory.add(
+      context,
       cUser.data.idUser!,
       cAddHistory.date,
       cAddHistory.type,
       jsonEncode(cAddHistory.items),
       cAddHistory.total.toString(),
     );
-
+    print(success);
     if (success) {
-      Get.back(result: true);
+      Future.delayed(const Duration(milliseconds: 3000), () {
+        Get.back(result: true);
+      });
     }
   }
 
@@ -158,7 +162,7 @@ class AddHistoryPage extends StatelessWidget {
             color: AppColor.primary,
             borderRadius: BorderRadius.circular(15),
             child: InkWell(
-              onTap: () => addHistory(),
+              onTap: () => addHistory(context),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Center(

@@ -27,8 +27,8 @@ class SourceHistory {
     return responseBody;
   }
 
-  static Future<bool> add(String idUser, String date, String type,
-      String details, String total) async {
+  static Future<bool> add(BuildContext context, String idUser, String date,
+      String type, String details, String total) async {
     String url = '${Api.history}/add.php';
     Map? responseBody = await AppRequest.post(url, {
       'id_user': idUser,
@@ -41,16 +41,16 @@ class SourceHistory {
     });
     if (responseBody == null) return false;
     if (responseBody['success']) {
-      DInfo.dialogSuccess(date as BuildContext, 'Tambah History Berhasil');
-      DInfo.closeDialog(date as BuildContext,
+      DInfo.dialogSuccess(context, 'Tambah History Berhasil');
+      DInfo.closeDialog(context,
           durationBeforeClose: const Duration(seconds: 1));
     } else {
       if (responseBody['message'] == 'date') {
-        DInfo.dialogError(date as BuildContext, 'History pernah dibuat');
-        DInfo.closeDialog(date as BuildContext);
+        DInfo.dialogError(context, 'History pernah dibuat');
+        DInfo.closeDialog(context);
       } else {
-        DInfo.dialogError(date as BuildContext, 'Gagal Ditambah');
-        DInfo.closeDialog(date as BuildContext);
+        DInfo.dialogError(context, 'Gagal Ditambah');
+        DInfo.closeDialog(context);
       }
     }
     return responseBody['success'];
